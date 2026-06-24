@@ -1,0 +1,1192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Jamitex | Pakistan Textile Broker Platform</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #f6faf5;
+      --panel: #ffffff;
+      --primary: #2d7a3a;
+      --primary-soft: #e5f3e5;
+      --text: #15321f;
+      --muted: #5a6b5f;
+      --border: #d8e3d6;
+      --danger: #c23131;
+      --card-radius: 18px;
+      --shadow: 0 15px 40px rgba(14, 70, 27, 0.12);
+      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: radial-gradient(circle at top left, rgba(45, 122, 58, 0.08), transparent 40%),
+        linear-gradient(180deg, #fdfdfd 0%, #f3f7ef 100%);
+      color: var(--text);
+      line-height: 1.5;
+      font-size: 16px;
+    }
+
+    button,
+    input,
+    select,
+    textarea {
+      font: inherit;
+    }
+
+    .app-shell {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 24px 20px 40px;
+    }
+
+    .page {
+      display: none;
+    }
+
+    .page.active {
+      display: block;
+    }
+
+    .card {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: var(--card-radius);
+      box-shadow: var(--shadow);
+      padding: 22px;
+      margin-bottom: 24px;
+    }
+
+    .hero {
+      display: grid;
+      gap: 20px;
+      align-items: center;
+      padding: 48px 32px;
+      background: rgba(255, 255, 255, 0.92);
+      border: 1px solid var(--border);
+      border-radius: 28px;
+      box-shadow: var(--shadow);
+      text-align: center;
+    }
+
+    .hero h1 {
+      margin: 0;
+      font-size: clamp(2.4rem, 4vw, 4rem);
+      letter-spacing: -0.04em;
+      color: var(--primary);
+    }
+
+    .hero p {
+      margin: 0;
+      max-width: 760px;
+      margin-left: auto;
+      margin-right: auto;
+      color: var(--muted);
+      font-size: 1.05rem;
+    }
+
+    .login-buttons {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+      margin-top: 16px;
+    }
+
+    .btn,
+    .small-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      border: none;
+      border-radius: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.16s ease, box-shadow 0.16s ease;
+    }
+
+    .btn:hover,
+    .small-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 12px 24px rgba(45, 122, 58, 0.12);
+    }
+
+    .btn.primary {
+      background: var(--primary);
+      color: white;
+      padding: 16px 24px;
+    }
+
+    .btn.secondary {
+      background: white;
+      color: var(--text);
+      border: 1px solid var(--primary);
+      padding: 14px 22px;
+    }
+
+    .section-title {
+      margin: 0 0 20px;
+      font-size: 1.5rem;
+      color: var(--primary);
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .field label {
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .field small {
+      color: var(--muted);
+      font-size: 0.88rem;
+    }
+
+    input,
+    select,
+    textarea {
+      width: 100%;
+      padding: 12px 14px;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      outline: none;
+      background: #fff;
+      color: var(--text);
+    }
+
+    select {
+      appearance: none;
+      background-image: linear-gradient(45deg, transparent 50%, var(--muted) 50%),
+        linear-gradient(135deg, var(--muted) 50%, transparent 50%);
+      background-position: calc(100% - 18px) calc(50% - 2px), calc(100% - 13px) calc(50% - 2px);
+      background-size: 8px 8px;
+      background-repeat: no-repeat;
+    }
+
+    .table-shell {
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 760px;
+    }
+
+    th,
+    td {
+      text-align: left;
+      padding: 14px 16px;
+      border-bottom: 1px solid #edf2ea;
+      vertical-align: middle;
+    }
+
+    th {
+      color: var(--muted);
+      font-size: 0.95rem;
+      letter-spacing: 0.02em;
+      text-transform: uppercase;
+    }
+
+    .status-pill {
+      display: inline-flex;
+      align-items: center;
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-size: 0.88rem;
+      font-weight: 700;
+      text-transform: capitalize;
+    }
+
+    .status-available {
+      background: rgba(45, 122, 58, 0.12);
+      color: #2d7a3a;
+    }
+
+    .status-open {
+      background: rgba(24, 102, 199, 0.12);
+      color: #1661c4;
+    }
+
+    .status-in-progress {
+      background: #f4d396;
+      color: #81510e;
+    }
+
+    .status-sold,
+    .status-fulfilled {
+      background: rgba(58, 123, 176, 0.16);
+      color: #264d66;
+    }
+
+    .broker-grid {
+      display: grid;
+      grid-template-columns: 1.2fr 1.1fr;
+      gap: 20px;
+      align-items: start;
+    }
+
+    .broker-column {
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    .filters {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .listing-card,
+    .requirement-card,
+    .deal-card {
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      background: white;
+      padding: 18px;
+      display: grid;
+      gap: 12px;
+    }
+
+    .listing-card h4,
+    .requirement-card h4 {
+      margin: 0;
+      font-size: 1rem;
+      color: var(--primary);
+    }
+
+    .listing-details {
+      display: grid;
+      gap: 8px;
+    }
+
+    .listing-details div {
+      font-size: 0.94rem;
+      color: var(--muted);
+    }
+
+    .listing-actions {
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    .listing-actions .btn {
+      width: auto;
+      padding: 10px 16px;
+    }
+
+    .tabs {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 18px;
+    }
+
+    .tab-button {
+      padding: 12px 18px;
+      border-radius: 999px;
+      border: 1px solid transparent;
+      background: #f5faf3;
+      color: var(--text);
+      cursor: pointer;
+      font-weight: 700;
+    }
+
+    .tab-button.active {
+      background: var(--primary);
+      color: white;
+      border-color: rgba(45, 122, 58, 0.2);
+    }
+
+    .deal-builder {
+      padding: 18px;
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      background: #fcfff9;
+    }
+
+    .deal-builder h3 {
+      margin-top: 0;
+    }
+
+    .deal-builder-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+      margin-top: 14px;
+    }
+
+    .deal-side {
+      display: grid;
+      gap: 12px;
+    }
+
+    .deal-side select {
+      width: 100%;
+    }
+
+    .deal-actions {
+      display: flex;
+      gap: 12px;
+      justify-content: flex-end;
+      margin-top: 18px;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    .page-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 18px;
+      margin-bottom: 22px;
+      flex-wrap: wrap;
+    }
+
+    .page-header .hint {
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .hero-illustration {
+      display: grid;
+      justify-items: center;
+      gap: 18px;
+    }
+
+    .hero-illustration img {
+      max-width: 320px;
+      width: 100%;
+      border-radius: 26px;
+      border: 1px solid var(--border);
+      background: white;
+      box-shadow: var(--shadow);
+    }
+
+    .full-width {
+      grid-column: 1 / -1;
+    }
+
+    @media (max-width: 900px) {
+      .form-grid,
+      .broker-grid,
+      .deal-builder-grid,
+      .filters {
+        grid-template-columns: 1fr;
+      }
+
+      .login-buttons {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 700px) {
+      body {
+        padding-top: 10px;
+      }
+
+      .app-shell {
+        padding: 18px 16px 30px;
+      }
+
+      .hero {
+        padding: 32px 20px;
+      }
+
+      .btn,
+      .small-btn {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app-shell">
+    <section class="page active" id="landing-page">
+      <div class="hero">
+        <div>
+          <h1>Pakistan's textile industry connected on one platform</h1>
+          <p>Jamitex helps brokers, vendors and manufacturers move raw material faster. A simple platform built for the B2B textile market in Multan, Faisalabad and beyond.</p>
+        </div>
+        <div class="hero-illustration">
+          <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='640' height='420' viewBox='0 0 640 420'%3E%3Crect width='640' height='420' rx='30' fill='%23ffffff'/%3E%3Cpath d='M70 360C120 320 180 300 240 302C300 305 360 330 420 316C480 302 540 240 590 200' stroke='%232d7a3a' stroke-width='24' stroke-linecap='round' fill='none'/%3E%3Ccircle cx='170' cy='140' r='48' fill='%233d9146' opacity='.18'/%3E%3Ccircle cx='500' cy='190' r='60' fill='%230e4b24' opacity='.11'/%3E%3Cpath d='M120 110H220V176H120z' fill='%23eaf5ea' stroke='%232d7a3a' stroke-width='12'/%3E%3Cpath d='M370 70H520V150H370z' fill='%23eaf5ea' stroke='%232d7a3a' stroke-width='12'/%3E%3Cpath d='M317 204H445V304H317z' fill='%23eaf5ea' stroke='%232d7a3a' stroke-width='12'/%3E%3C/svg%3E" alt="Platform illustration" />
+        </div>
+        <div class="login-buttons">
+          <button class="btn primary" data-view="vendor">Vendor login<br /><small>فروش کنندہ لاگ ان</small></button>
+          <button class="btn primary" data-view="manufacturer">Manufacturer login<br /><small>مینوفیکچرر لاگ ان</small></button>
+          <button class="btn primary" data-view="broker">Broker login<br /><small>بروکر لاگ ان</small></button>
+        </div>
+      </div>
+    </section>
+
+    <section class="page" id="vendor-page">
+      <div class="page-header">
+        <div>
+          <p class="hint">Vendor portal / فروش کنندہ پورٹل</p>
+          <h2 class="section-title">List your stock</h2>
+        </div>
+        <button class="btn secondary" data-action="back">Back to landing</button>
+      </div>
+      <div class="card">
+        <form id="vendor-form" class="form-grid">
+          <div class="field">
+            <label>Material type<br /><small>مواد کی قسم</small></label>
+            <select name="materialType" required>
+              <option value="">Select material</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Quantity available<br /><small>موجودہ مقدار</small></label>
+            <input name="quantity" type="number" min="1" step="1" placeholder="100" required />
+          </div>
+          <div class="field">
+            <label>Unit<br /><small>یونٹ</small></label>
+            <select name="unit" required>
+              <option value="">Select unit</option>
+              <option value="kg">kg</option>
+              <option value="meters">meters</option>
+              <option value="bales">bales</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Grade / quality<br /><small>گریڈ / معیار</small></label>
+            <input name="grade" type="text" placeholder="A, B, standard" required />
+          </div>
+          <div class="field">
+            <label>Price per unit (PKR)<br /><small>قیمت فی یونٹ</small></label>
+            <input name="price" type="number" min="0" step="0.01" placeholder="250" required />
+          </div>
+          <div class="field">
+            <label>City<br /><small>شہر</small></label>
+            <select name="city" required>
+              <option value="">Select city</option>
+            </select>
+          </div>
+          <div class="field full-width">
+            <label>WhatsApp number<br /><small>واٹس ایپ نمبر</small></label>
+            <input name="whatsapp" type="tel" placeholder="0300 1234567" required />
+          </div>
+          <div class="field full-width">
+            <button class="btn primary" type="submit">Add stock<br /><small>اسٹاک شامل کریں</small></button>
+          </div>
+        </form>
+      </div>
+      <div class="card">
+        <h3>My active listings<br /><small>میری سرگرم لسٹنگز</small></h3>
+        <div class="table-shell">
+          <table>
+            <thead>
+              <tr>
+                <th>Material</th>
+                <th>Qty</th>
+                <th>Grade</th>
+                <th>Price</th>
+                <th>City</th>
+                <th>WhatsApp</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody id="vendor-listings"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section class="page" id="manufacturer-page">
+      <div class="page-header">
+        <div>
+          <p class="hint">Manufacturer portal / مینوفیکچرر پورٹل</p>
+          <h2 class="section-title">Post your requirement</h2>
+        </div>
+        <button class="btn secondary" data-action="back">Back to landing</button>
+      </div>
+      <div class="card">
+        <form id="manufacturer-form" class="form-grid">
+          <div class="field">
+            <label>Material type<br /><small>مواد کی قسم</small></label>
+            <select name="materialType" required>
+              <option value="">Select material</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Quantity needed<br /><small>ضروری مقدار</small></label>
+            <input name="quantity" type="number" min="1" step="1" placeholder="200" required />
+          </div>
+          <div class="field">
+            <label>Unit<br /><small>یونٹ</small></label>
+            <select name="unit" required>
+              <option value="">Select unit</option>
+              <option value="kg">kg</option>
+              <option value="meters">meters</option>
+              <option value="bales">bales</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Grade required<br /><small>ضروری گریڈ</small></label>
+            <input name="grade" type="text" placeholder="A, B, standard" required />
+          </div>
+          <div class="field">
+            <label>Deadline to fulfill<br /><small>مکمل کرنے کی آخری تاریخ</small></label>
+            <input name="deadline" type="date" required />
+          </div>
+          <div class="field">
+            <label>City<br /><small>شہر</small></label>
+            <select name="city" required>
+              <option value="">Select city</option>
+            </select>
+          </div>
+          <div class="field full-width">
+            <label>WhatsApp number<br /><small>واٹس ایپ نمبر</small></label>
+            <input name="whatsapp" type="tel" placeholder="0300 1234567" required />
+          </div>
+          <div class="field full-width">
+            <button class="btn primary" type="submit">Post requirement<br /><small>ضرورت پوسٹ کریں</small></button>
+          </div>
+        </form>
+      </div>
+      <div class="card">
+        <h3>My active requirements<br /><small>میری سرگرم ضروریات</small></h3>
+        <div class="table-shell">
+          <table>
+            <thead>
+              <tr>
+                <th>Material</th>
+                <th>Qty</th>
+                <th>Grade</th>
+                <th>Deadline</th>
+                <th>City</th>
+                <th>WhatsApp</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody id="manufacturer-listings"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section class="page" id="broker-page">
+      <div class="page-header">
+        <div>
+          <p class="hint">Broker dashboard / بروکر ڈیش بورڈ</p>
+          <h2 class="section-title">Match stock and requirements</h2>
+        </div>
+        <button class="btn secondary" data-action="back">Back to landing</button>
+      </div>
+      <div class="tabs">
+        <button class="tab-button active" data-tab="dashboard">Dashboard<br /><small>ڈیش بورڈ</small></button>
+        <button class="tab-button" data-tab="deals">Deals<br /><small>معاملات</small></button>
+      </div>
+      <div id="broker-dashboard-view">
+        <div class="broker-grid">
+          <div class="broker-column">
+            <div class="card">
+              <h3>Available Stock<br /><small>دستیاب اسٹاک</small></h3>
+              <div class="filters">
+                <div class="field">
+                  <label>Material type<br /><small>مواد کی قسم</small></label>
+                  <select id="broker-stock-type-filter">
+                    <option value="all">All materials</option>
+                  </select>
+                </div>
+                <div class="field">
+                  <label>City<br /><small>شہر</small></label>
+                  <select id="broker-stock-city-filter">
+                    <option value="all">All cities</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+            <div id="broker-stock-list"></div>
+          </div>
+          <div class="broker-column">
+            <div class="card">
+              <h3>Open Requirements<br /><small>کھلی ضروریات</small></h3>
+              <div class="filters">
+                <div class="field">
+                  <label>Material type<br /><small>مواد کی قسم</small></label>
+                  <select id="broker-req-type-filter">
+                    <option value="all">All materials</option>
+                  </select>
+                </div>
+                <div class="field">
+                  <label>City<br /><small>شہر</small></label>
+                  <select id="broker-req-city-filter">
+                    <option value="all">All cities</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+            <div id="broker-req-list"></div>
+          </div>
+        </div>
+        <div id="deal-builder" class="deal-builder hidden">
+          <h3>Create deal<br /><small>معاملہ بنائیں</small></h3>
+          <div class="deal-builder-grid">
+            <div class="deal-side">
+              <label>Vendor stock<br /><small>فروش کنندہ اسٹاک</small></label>
+              <div id="deal-vendor-preview"></div>
+            </div>
+            <div class="deal-side">
+              <label>Manufacturer requirement<br /><small>مینوفیکچرر ضرورت</small></label>
+              <div id="deal-requirement-preview"></div>
+            </div>
+          </div>
+          <div class="deal-actions">
+            <button class="btn primary" id="create-deal-button">Create deal<br /><small>معاملہ بنائیں</small></button>
+            <button class="btn secondary" id="clear-deal-button">Clear<br /><small>خارج کریں</small></button>
+          </div>
+        </div>
+      </div>
+      <div id="broker-deals-view" class="hidden">
+        <div class="card">
+          <h3>Deals history<br /><small>معاملات کی تاریخ</small></h3>
+          <div id="broker-deals-list"></div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    const materials = [
+      'raw cotton',
+      'combed yarn',
+      'polyester staple fiber',
+      'greige fabric',
+      'dyed fabric',
+      'thread',
+      'dyes and chemicals',
+      'other'
+    ];
+
+    const cities = ['Multan', 'Faisalabad', 'Karachi', 'Lahore', 'Sialkot', 'Hyderabad', 'other'];
+
+    const storageKeys = {
+      vendors: 'jamitex-vendor-listings',
+      manufacturers: 'jamitex-manufacturer-requirements',
+      deals: 'jamitex-broker-deals'
+    };
+
+    const state = {
+      currentUser: '',
+      vendorListings: [],
+      manufacturerRequirements: [],
+      deals: [],
+      selectedVendorId: null,
+      selectedRequirementId: null,
+      brokerView: 'dashboard',
+      filters: {
+        stockType: 'all',
+        stockCity: 'all',
+        reqType: 'all',
+        reqCity: 'all'
+      }
+    };
+
+    function $(query, parent = document) {
+      return parent.querySelector(query);
+    }
+
+    function $all(query, parent = document) {
+      return Array.from(parent.querySelectorAll(query));
+    }
+
+    function init() {
+      loadData();
+      populateSelects();
+      attachEvents();
+      renderVendorListings();
+      renderManufacturerListings();
+      renderBrokerFilters();
+      renderBrokerLists();
+      renderDealBuilder();
+      renderBrokerDeals();
+      showPage('landing-page');
+    }
+
+    function loadData() {
+      try {
+        state.vendorListings = JSON.parse(localStorage.getItem(storageKeys.vendors)) || [];
+      } catch (error) {
+        state.vendorListings = [];
+      }
+      try {
+        state.manufacturerRequirements = JSON.parse(localStorage.getItem(storageKeys.manufacturers)) || [];
+      } catch (error) {
+        state.manufacturerRequirements = [];
+      }
+      try {
+        state.deals = JSON.parse(localStorage.getItem(storageKeys.deals)) || [];
+      } catch (error) {
+        state.deals = [];
+      }
+    }
+
+    function saveData() {
+      localStorage.setItem(storageKeys.vendors, JSON.stringify(state.vendorListings));
+      localStorage.setItem(storageKeys.manufacturers, JSON.stringify(state.manufacturerRequirements));
+      localStorage.setItem(storageKeys.deals, JSON.stringify(state.deals));
+    }
+
+    function populateSelects() {
+      const vendorMaterial = $('#vendor-page select[name="materialType"]');
+      const manufacturerMaterial = $('#manufacturer-page select[name="materialType"]');
+      const stockTypeFilter = $('#broker-stock-type-filter');
+      const reqTypeFilter = $('#broker-req-type-filter');
+      const vendorCity = $('#vendor-page select[name="city"]');
+      const manufacturerCity = $('#manufacturer-page select[name="city"]');
+      const stockCityFilter = $('#broker-stock-city-filter');
+      const reqCityFilter = $('#broker-req-city-filter');
+
+      materials.forEach(value => {
+        const option = document.createElement('option');
+        option.value = value;
+        option.textContent = value;
+        vendorMaterial.appendChild(option.cloneNode(true));
+        manufacturerMaterial.appendChild(option.cloneNode(true));
+        stockTypeFilter.appendChild(option.cloneNode(true));
+        reqTypeFilter.appendChild(option.cloneNode(true));
+      });
+      cities.forEach(value => {
+        const option = document.createElement('option');
+        option.value = value;
+        option.textContent = value;
+        vendorCity.appendChild(option.cloneNode(true));
+        manufacturerCity.appendChild(option.cloneNode(true));
+        stockCityFilter.appendChild(option.cloneNode(true));
+        reqCityFilter.appendChild(option.cloneNode(true));
+      });
+    }
+
+    function attachEvents() {
+      $all('[data-view]').forEach(button => {
+        button.addEventListener('click', () => {
+          const view = button.getAttribute('data-view');
+          if (view) {
+            state.currentUser = view;
+            showPage(`${view}-page`);
+          }
+        });
+      });
+      $all('[data-action="back"]').forEach(button => {
+        button.addEventListener('click', () => {
+          state.currentUser = '';
+          state.selectedVendorId = null;
+          state.selectedRequirementId = null;
+          state.filters = {stockType:'all', stockCity:'all', reqType:'all', reqCity:'all'};
+          showPage('landing-page');
+        });
+      });
+
+      $('#vendor-form').addEventListener('submit', event => {
+        event.preventDefault();
+        const form = event.target;
+        const listing = {
+          id: crypto.randomUUID(),
+          materialType: form.materialType.value,
+          quantity: Number(form.quantity.value),
+          unit: form.unit.value,
+          grade: form.grade.value.trim(),
+          price: Number(form.price.value),
+          city: form.city.value,
+          whatsapp: form.whatsapp.value.trim(),
+          status: 'available',
+          createdAt: new Date().toISOString()
+        };
+        state.vendorListings.unshift(listing);
+        saveData();
+        renderVendorListings();
+        form.reset();
+      });
+
+      $('#manufacturer-form').addEventListener('submit', event => {
+        event.preventDefault();
+        const form = event.target;
+        const requirement = {
+          id: crypto.randomUUID(),
+          materialType: form.materialType.value,
+          quantity: Number(form.quantity.value),
+          unit: form.unit.value,
+          grade: form.grade.value.trim(),
+          deadline: form.deadline.value,
+          city: form.city.value,
+          whatsapp: form.whatsapp.value.trim(),
+          status: 'open',
+          createdAt: new Date().toISOString()
+        };
+        state.manufacturerRequirements.unshift(requirement);
+        saveData();
+        renderManufacturerListings();
+        form.reset();
+      });
+
+      $('#broker-stock-type-filter').addEventListener('change', event => {
+        state.filters.stockType = event.target.value;
+        renderBrokerLists();
+      });
+      $('#broker-stock-city-filter').addEventListener('change', event => {
+        state.filters.stockCity = event.target.value;
+        renderBrokerLists();
+      });
+      $('#broker-req-type-filter').addEventListener('change', event => {
+        state.filters.reqType = event.target.value;
+        renderBrokerLists();
+      });
+      $('#broker-req-city-filter').addEventListener('change', event => {
+        state.filters.reqCity = event.target.value;
+        renderBrokerLists();
+      });
+
+      $('#broker-page .tabs').addEventListener('click', event => {
+        const button = event.target.closest('[data-tab]');
+        if (!button) return;
+        const tab = button.getAttribute('data-tab');
+        state.brokerView = tab;
+        $all('.tab-button', $('#broker-page')).forEach(el => el.classList.toggle('active', el === button));
+        $('#broker-dashboard-view').classList.toggle('hidden', tab !== 'dashboard');
+        $('#broker-deals-view').classList.toggle('hidden', tab !== 'deals');
+      });
+
+      $('#broker-page').addEventListener('click', event => {
+        const connect = event.target.closest('[data-action="connect"]');
+        if (connect) {
+          const itemId = connect.getAttribute('data-id');
+          const itemType = connect.getAttribute('data-type');
+          if (itemType === 'vendor') {
+            state.selectedVendorId = itemId;
+          } else {
+            state.selectedRequirementId = itemId;
+          }
+          renderDealBuilder();
+        }
+      });
+
+      $('#broker-page').addEventListener('change', event => {
+        if (event.target.id === 'deal-vendor-select') {
+          state.selectedVendorId = event.target.value || null;
+          renderDealBuilder();
+        }
+        if (event.target.id === 'deal-requirement-select') {
+          state.selectedRequirementId = event.target.value || null;
+          renderDealBuilder();
+        }
+      });
+
+      $('#create-deal-button').addEventListener('click', () => {
+        if (!state.selectedVendorId || !state.selectedRequirementId) {
+          alert('Please choose both vendor stock and manufacturer requirement.');
+          return;
+        }
+        createDeal(state.selectedVendorId, state.selectedRequirementId);
+      });
+
+      $('#clear-deal-button').addEventListener('click', () => {
+        state.selectedVendorId = null;
+        state.selectedRequirementId = null;
+        renderDealBuilder();
+      });
+
+      document.getElementById('broker-deals-list').addEventListener('click', event => {
+        const action = event.target.closest('[data-action]');
+        if (!action) return;
+        const dealId = action.getAttribute('data-id');
+        const deal = state.deals.find(item => item.id === dealId);
+        if (!deal) return;
+        if (action.getAttribute('data-action') === 'mark-in-progress') {
+          updateDealStatus(deal, 'in progress');
+        }
+        if (action.getAttribute('data-action') === 'mark-complete') {
+          updateDealStatus(deal, 'completed');
+        }
+      });
+    }
+
+    function showPage(pageId) {
+      $all('.page').forEach(page => page.classList.toggle('active', page.id === pageId));
+      if (pageId === 'broker-page') {
+        renderBrokerLists();
+        renderDealBuilder();
+        renderBrokerDeals();
+      }
+    }
+
+    function renderVendorListings() {
+      const tbody = $('#vendor-listings');
+      tbody.innerHTML = '';
+      if (!state.vendorListings.length) {
+        const row = document.createElement('tr');
+        row.innerHTML = '<td colspan="7">No stock listed yet.</td>';
+        tbody.appendChild(row);
+        return;
+      }
+      state.vendorListings.forEach(item => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td>${item.materialType}</td>
+          <td>${item.quantity} ${item.unit}</td>
+          <td>${item.grade}</td>
+          <td>PKR ${item.price.toLocaleString()}</td>
+          <td>${item.city}</td>
+          <td>${item.whatsapp}</td>
+          <td><span class="status-pill status-${item.status.replace(' ', '-')}">${item.status}</span></td>
+        `;
+        tbody.appendChild(row);
+      });
+    }
+
+    function renderManufacturerListings() {
+      const tbody = $('#manufacturer-listings');
+      tbody.innerHTML = '';
+      if (!state.manufacturerRequirements.length) {
+        const row = document.createElement('tr');
+        row.innerHTML = '<td colspan="7">No requirements posted yet.</td>';
+        tbody.appendChild(row);
+        return;
+      }
+      state.manufacturerRequirements.forEach(item => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td>${item.materialType}</td>
+          <td>${item.quantity} ${item.unit}</td>
+          <td>${item.grade}</td>
+          <td>${item.deadline}</td>
+          <td>${item.city}</td>
+          <td>${item.whatsapp}</td>
+          <td><span class="status-pill status-${item.status.replace(' ', '-')}">${item.status}</span></td>
+        `;
+        tbody.appendChild(row);
+      });
+    }
+
+    function renderBrokerFilters() {
+      $('#broker-stock-type-filter').value = state.filters.stockType;
+      $('#broker-stock-city-filter').value = state.filters.stockCity;
+      $('#broker-req-type-filter').value = state.filters.reqType;
+      $('#broker-req-city-filter').value = state.filters.reqCity;
+    }
+
+    function renderBrokerLists() {
+      const stockContainer = $('#broker-stock-list');
+      const reqContainer = $('#broker-req-list');
+      stockContainer.innerHTML = '';
+      reqContainer.innerHTML = '';
+
+      const filteredStock = state.vendorListings.filter(item => {
+        const typeMatch = state.filters.stockType === 'all' || item.materialType === state.filters.stockType;
+        const cityMatch = state.filters.stockCity === 'all' || item.city === state.filters.stockCity;
+        return typeMatch && cityMatch;
+      });
+      const filteredReqs = state.manufacturerRequirements.filter(item => {
+        const typeMatch = state.filters.reqType === 'all' || item.materialType === state.filters.reqType;
+        const cityMatch = state.filters.reqCity === 'all' || item.city === state.filters.reqCity;
+        return typeMatch && cityMatch;
+      });
+
+      if (!filteredStock.length) {
+        stockContainer.innerHTML = '<div class="card"><p>No matching vendor stock.</p></div>';
+      } else {
+        filteredStock.forEach(item => {
+          const card = document.createElement('article');
+          card.className = 'listing-card';
+          card.innerHTML = `
+            <h4>${item.materialType}</h4>
+            <div class="listing-details">
+              <div><strong>Qty:</strong> ${item.quantity} ${item.unit}</div>
+              <div><strong>Grade:</strong> ${item.grade}</div>
+              <div><strong>Price:</strong> PKR ${item.price.toLocaleString()}</div>
+              <div><strong>City:</strong> ${item.city}</div>
+              <div><strong>Status:</strong> <span class="status-pill status-${item.status.replace(' ', '-')}">${item.status}</span></div>
+            </div>
+            <div class="listing-actions">
+              <button class="btn secondary" data-action="connect" data-type="vendor" data-id="${item.id}">Connect<br /><small>جوڑیں</small></button>
+            </div>
+          `;
+          stockContainer.appendChild(card);
+        });
+      }
+
+      if (!filteredReqs.length) {
+        reqContainer.innerHTML = '<div class="card"><p>No matching manufacturer requirements.</p></div>';
+      } else {
+        filteredReqs.forEach(item => {
+          const card = document.createElement('article');
+          card.className = 'requirement-card';
+          card.innerHTML = `
+            <h4>${item.materialType}</h4>
+            <div class="listing-details">
+              <div><strong>Qty:</strong> ${item.quantity} ${item.unit}</div>
+              <div><strong>Grade:</strong> ${item.grade}</div>
+              <div><strong>Deadline:</strong> ${item.deadline}</div>
+              <div><strong>City:</strong> ${item.city}</div>
+              <div><strong>Status:</strong> <span class="status-pill status-${item.status.replace(' ', '-')}">${item.status}</span></div>
+            </div>
+            <div class="listing-actions">
+              <button class="btn secondary" data-action="connect" data-type="requirement" data-id="${item.id}">Connect<br /><small>جوڑیں</small></button>
+            </div>
+          `;
+          reqContainer.appendChild(card);
+        });
+      }
+    }
+
+    function getVendorById(id) {
+      return state.vendorListings.find(item => item.id === id) || null;
+    }
+
+    function getRequirementById(id) {
+      return state.manufacturerRequirements.find(item => item.id === id) || null;
+    }
+
+    function renderDealBuilder() {
+      const builder = $('#deal-builder');
+      const vendorPreview = $('#deal-vendor-preview');
+      const requirementPreview = $('#deal-requirement-preview');
+      if (!state.selectedVendorId && !state.selectedRequirementId) {
+        builder.classList.add('hidden');
+        return;
+      }
+
+      builder.classList.remove('hidden');
+      const selectedVendor = getVendorById(state.selectedVendorId);
+      const selectedRequirement = getRequirementById(state.selectedRequirementId);
+
+      if (selectedVendor) {
+        vendorPreview.innerHTML = `
+          <div class="listing-card">
+            <div><strong>${selectedVendor.materialType}</strong></div>
+            <div>Qty: ${selectedVendor.quantity} ${selectedVendor.unit}</div>
+            <div>Grade: ${selectedVendor.grade}</div>
+            <div>Price: PKR ${selectedVendor.price.toLocaleString()}</div>
+            <div>City: ${selectedVendor.city}</div>
+          </div>
+        `;
+      } else {
+        const vendorOptions = state.vendorListings.map(item => `<option value="${item.id}">${item.materialType} – ${item.quantity} ${item.unit} (${item.city})</option>`).join('');
+        vendorPreview.innerHTML = `
+          <select id="deal-vendor-select">
+            <option value="">Choose vendor stock</option>
+            ${vendorOptions}
+          </select>
+        `;
+      }
+
+      if (selectedRequirement) {
+        requirementPreview.innerHTML = `
+          <div class="listing-card">
+            <div><strong>${selectedRequirement.materialType}</strong></div>
+            <div>Qty: ${selectedRequirement.quantity} ${selectedRequirement.unit}</div>
+            <div>Grade: ${selectedRequirement.grade}</div>
+            <div>Deadline: ${selectedRequirement.deadline}</div>
+            <div>City: ${selectedRequirement.city}</div>
+          </div>
+        `;
+      } else {
+        const reqOptions = state.manufacturerRequirements.map(item => `<option value="${item.id}">${item.materialType} – ${item.quantity} ${item.unit} (${item.city})</option>`).join('');
+        requirementPreview.innerHTML = `
+          <select id="deal-requirement-select">
+            <option value="">Choose manufacturer requirement</option>
+            ${reqOptions}
+          </select>
+        `;
+      }
+    }
+
+    function createDeal(vendorId, requirementId) {
+      const vendor = getVendorById(vendorId);
+      const requirement = getRequirementById(requirementId);
+      if (!vendor || !requirement) {
+        alert('Selected stock or requirement is no longer available.');
+        return;
+      }
+
+      const deal = {
+        id: crypto.randomUUID(),
+        vendorId,
+        requirementId,
+        status: 'in progress',
+        createdAt: new Date().toISOString()
+      };
+
+      state.deals.unshift(deal);
+      vendor.status = 'in progress';
+      requirement.status = 'in progress';
+      state.selectedVendorId = null;
+      state.selectedRequirementId = null;
+      saveData();
+      renderBrokerLists();
+      renderDealBuilder();
+      renderBrokerDeals();
+      alert('Deal created. Update status on the deals tab when the transaction completes.');
+    }
+
+    function renderBrokerDeals() {
+      const container = $('#broker-deals-list');
+      container.innerHTML = '';
+      if (!state.deals.length) {
+        container.innerHTML = '<p>No deals created yet.</p>';
+        return;
+      }
+
+      state.deals.forEach(deal => {
+        const vendor = getVendorById(deal.vendorId);
+        const requirement = getRequirementById(deal.requirementId);
+        const card = document.createElement('article');
+        card.className = 'deal-card';
+        card.innerHTML = `
+          <div style="display:grid; gap:10px;">
+            <div><strong>Vendor stock:</strong> ${vendor ? vendor.materialType : 'Removed'} ${vendor ? `(${vendor.quantity} ${vendor.unit})` : ''}</div>
+            <div><strong>Manufacturer need:</strong> ${requirement ? requirement.materialType : 'Removed'} ${requirement ? `(${requirement.quantity} ${requirement.unit})` : ''}</div>
+            <div><strong>Status:</strong> <span class="status-pill status-${deal.status.replace(' ', '-')}">${deal.status}</span></div>
+          </div>
+          <div class="listing-actions">
+            ${deal.status === 'in progress' ? '<button class="btn secondary" data-action="mark-complete" data-id="' + deal.id + '">Mark completed<br /><small>مکمل کریں</small></button>' : ''}
+            ${deal.status === 'open' ? '<button class="btn secondary" data-action="mark-in-progress" data-id="' + deal.id + '">Mark in progress<br /><small>عملدرآمد</small></button>' : ''}
+          </div>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    function updateDealStatus(deal, nextStatus) {
+      deal.status = nextStatus;
+      const vendor = getVendorById(deal.vendorId);
+      const requirement = getRequirementById(deal.requirementId);
+      if (nextStatus === 'in progress') {
+        if (vendor) vendor.status = 'in progress';
+        if (requirement) requirement.status = 'in progress';
+      }
+      if (nextStatus === 'completed') {
+        if (vendor) vendor.status = 'sold';
+        if (requirement) requirement.status = 'fulfilled';
+      }
+      saveData();
+      renderBrokerLists();
+      renderBrokerDeals();
+      renderVendorListings();
+      renderManufacturerListings();
+    }
+
+    init();
+  </script>
+</body>
+</html>
